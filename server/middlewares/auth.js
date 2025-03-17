@@ -2,28 +2,25 @@ import  jwt  from "jsonwebtoken";
 import user from "../models/user.js";
 
 export const isAuthenticated = async (req, res, next) => {
-    try {
+  try {
       const token = req.headers.authorization?.split(" ")[1];
-  
+
       if (!token) {
-        return res.status(401).json({
-            message: "Bad Request Try Login First",
-        });
+          return res.status(401).json({
+              message: "Bad Request. Try Logging In First",
+          });
       }
-  
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await user.findById(decoded._id);
-      console.log(req.user);
+
       if (!req.user) {
-        return res.status(404).json({ success: false, message: "User not found" });
+          return res.status(404).json({ success: false, message: "User not found" });
       }
-  
-    //   next();
-    } catch (error) {
+
+      next();
+  } catch (error) {
       console.error("Authentication Error:", error);
-      res.status(401).json({ message: "Invalid Token" });
-    }
-    finally{
-        next();
-    }
-  };
+      return res.status(401).json({ message: "Invalid Token" });
+  }
+};
