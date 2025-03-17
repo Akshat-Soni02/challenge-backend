@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { fetchAllEndingChallenges } from "./service/challengeService.js";
+import { fetchAllEndingChallenges, fetchTodayLog } from "./service/challengeService.js";
 import Challenge from "./models/challenge.js";
 
 dotenv.config();
