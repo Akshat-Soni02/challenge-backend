@@ -3,19 +3,19 @@ import { fetchAllEndingChallenges, fetchTodayLog } from "./challengeService.js";
 import Challenge from "../models/challenge.js";
 
 export const challengeStateCheck = () => {
-    cron.schedule("0 0 * * *", async () => {
+    cron.schedule("30 19 * * *", async () => {
         console.log("cron job started");
         const challenges  = await fetchAllEndingChallenges();
-        challenges.forEach( async(challenge) => {
+        for (const challenge of challenges) {
             try {
                 const todayLog = await fetchTodayLog(challenge);
-                if(!todayLog) await Challenge.findByIdAndUpdate(challenge._id, {status: "failed"});
-                else await Challenge.findByIdAndUpdate(challenge._id, {status: "completed"});
-                console.log("Successfully updated ending challenges");
+                const newStatus = todayLog ? "completed" : "failed";
+                await Challenge.findByIdAndUpdate(challenge._id, { status: newStatus });
+                console.log(`Updated challenge ${challenge._id} to ${newStatus}`);
             } catch (error) {
-                console.log("Error updating ending challenge");
+                console.error("Error updating challenge:", error);
             }
-        })
+        }
     });
 }
 

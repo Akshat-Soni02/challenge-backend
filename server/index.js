@@ -48,7 +48,7 @@ mongoose
   .catch((err) => console.log(err));
 
 
-// scheduleCronJobs();
+scheduleCronJobs();
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/challenge", challengeRouter);
